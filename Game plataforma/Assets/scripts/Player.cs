@@ -11,6 +11,9 @@ public class Player : MonoBehaviour
 
     private bool isJumping;
     private bool doubleJump;
+
+    public Animator anim;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -32,11 +35,26 @@ public class Player : MonoBehaviour
         rb.velocity = new Vector2 (movement * speed, rb.velocity.y);
 
         if (movement > 0) {
+
+            if (!isJumping) {
+                anim.SetInteger("transition", 1);
+            }
+
+            
             transform.eulerAngles = new Vector3(0, 0, 0);
         }
 
         if (movement < 0) {
+
+            if (!isJumping) {
+                anim.SetInteger("transition", 1);
+            }
+
             transform.eulerAngles = new Vector3 (0, 180, 0);
+        }
+
+        if (movement == 0 && !isJumping) {
+            anim.SetInteger("transition", 0);
         }
     }
 
@@ -44,6 +62,7 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Jump") ) {
 
             if (!isJumping) {
+                anim.SetInteger("transition", 2);
                 rb.AddForce(Vector2.up * forcaPulo, ForceMode2D.Impulse);
                 isJumping = true;
                 doubleJump = true;

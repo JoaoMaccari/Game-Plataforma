@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c6a0dcef519b73942a3fe7b0a87fc068
+guid: 6b339f5937313664abb7aff78e60a013
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -117,7 +117,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: herochar_jump_up_anim_strip_3_0
+      name: herochar_idle_anim_strip_4_0
       rect:
         serializedVersion: 2
         x: 0
@@ -125,20 +125,20 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4d4cb5bf310202641a75a56f4aa63c58
-      internalID: -1769789978
+      spriteID: 14ebee58b60486d4ba1db145359533d3
+      internalID: -2075966766
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: herochar_jump_up_anim_strip_3_1
+      name: herochar_idle_anim_strip_4_1
       rect:
         serializedVersion: 2
         x: 16
@@ -146,20 +146,20 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e15bcbbc70ae6e642a1f7d813b5fd385
-      internalID: 1508999888
+      spriteID: d576afa43d8905947b348bebf4eec2fc
+      internalID: -1218702434
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: herochar_jump_up_anim_strip_3_2
+      name: herochar_idle_anim_strip_4_2
       rect:
         serializedVersion: 2
         x: 32
@@ -167,14 +167,35 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: db32839dc643c8e44b663f163379c3fa
-      internalID: 56629170
+      spriteID: d76e6e3fa37897141bf3dc835049ff5a
+      internalID: 462246203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: herochar_idle_anim_strip_4_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7bcbcea5dea32af46b818ea17a021ba7
+      internalID: -719611937
       vertices: []
       indices: 
       edges: []
@@ -190,9 +211,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      herochar_jump_up_anim_strip_3_0: -1769789978
-      herochar_jump_up_anim_strip_3_1: 1508999888
-      herochar_jump_up_anim_strip_3_2: 56629170
+      herochar_idle_anim_strip_4_0: -2075966766
+      herochar_idle_anim_strip_4_1: -1218702434
+      herochar_idle_anim_strip_4_2: 462246203
+      herochar_idle_anim_strip_4_3: -719611937
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
