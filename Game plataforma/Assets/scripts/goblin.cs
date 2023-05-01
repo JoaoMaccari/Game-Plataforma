@@ -1,76 +1,62 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 
-public class goblin : MonoBehaviour
-    
+public class Goblin : MonoBehaviour
 {
-
     private Rigidbody2D rig;
+    private Animator anim;
 
-    public bool isFrtont;
+    private bool isFront;
+    public bool isRight;
+    public float stopDistance;
 
-    public float maxVision;
+    private Vector2 direction;
+
     public float speed;
-    public Vector2 direction;
+    public float maxVision;
 
     public Transform point;
-
-    public bool isRight;
+    public Transform behind;
 
     // Start is called before the first frame update
     void Start()
+
     {
-        rig.GetComponent<Rigidbody2D>();
+        rig = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
 
-        
-            if (isRight) {
-                transform.eulerAngles = new Vector2(0, 0);
-                direction = Vector2.right;
-                
-               
-            }
-            else {
-                transform.eulerAngles = new Vector2(0, 180);
-                direction = Vector2.left;
-              
-            }
-       
-
-
-
+        if (isRight) {
+            transform.eulerAngles = new Vector2(0, 0);
+            direction = Vector2.right;
+            
+        }
+        else {
+            transform.eulerAngles = new Vector2(0, 180);
+            direction = Vector2.left;
+           
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-
-
-        /*if (isRight) {
-            transform.eulerAngles = new Vector2(0, 0);
-            direction = Vector2.right;
-
-
-        }
-        else {
-            transform.eulerAngles = new Vector2(0, 180);
-            direction = Vector2.left;
-
-        }*/
-
+       
     }
 
+
     void FixedUpdate() {
-        getPlayer();    
+        getPlayer();
         onMove();
+
+        
     }
 
     void onMove() {
-        //só vai andar se o player estiver no ponto de visao do raycast
 
-        //
-        if (isFrtont) {
+        if (isFront) {
+
+            anim.SetInteger("transicao", 1);
 
             if (isRight) {
                 transform.eulerAngles = new Vector2(0, 0);
@@ -80,29 +66,60 @@ public class goblin : MonoBehaviour
             else {
                 transform.eulerAngles = new Vector2(0, 180);
                 direction = Vector2.left;
-                 rig.velocity = new Vector2(-speed, rig.velocity.y);
+                rig.velocity = new Vector2(-speed, rig.velocity.y);
             }
         }
-         
+
+
     }
 
-    void getPlayer() {
-        //passo o ponto de origem do raycast, direção, e a distancia de alcançe 
+
+    void getPlayer(){
         RaycastHit2D hit = Physics2D.Raycast(point.position, direction, maxVision);
 
-        //verifica se o hit está batendo em algum colisor
+        //vai detectar o colider do objeto
         if (hit.collider != null) {
-
+            
+            //verifica se a tag do objeto é o player
             if (hit.transform.CompareTag("Player")) {
-                isFrtont = true;    
-                Debug.Log("viu o player");
-                
+
+                isFront = true;
+
+                //variavel que usa metodo que mostra a distancia entre 2 objetos. Estou passando a posição de cada um em cena como referencia
+                float distance = Vector2.Distance(transform.position, hit.transform.position);
+
+                if (distance <= stopDistance) {//distancia pra atacar
+                    isFront = false;
+                    rig.velocity = Vector2.zero;
+
+                    anim.SetInteger("transicao", 2);
+                    hit.transform.GetComponent<Player>().onHit();
+                }
+
+
+                Debug.Log("viu player");
             }
+        }
+
+        RaycastHit2D behindHit = Physics2D.Raycast(behind.position, -direction, maxVision);
+
+        if (behindHit.collider != null) {
+
+            if (behindHit.transform.CompareTag("Player")) {
+
+                isRight = !isRight;
+                Debug.Log("atrás");
+            }
+
         }
     }
 
-    //só vai mostrar o gizmo no objeto selecionado
+
+    private void OnDrawGizmos() {
+        Gizmos.DrawRay(point.position, direction * maxVision);
+    }
+
     private void OnDrawGizmosSelected() {
-        Gizmos.DrawRay(point.position, Vector2.right * maxVision);
+        Gizmos.DrawRay(point.position, -direction * maxVision);
     }
 }

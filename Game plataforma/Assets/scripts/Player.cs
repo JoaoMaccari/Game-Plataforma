@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     private bool isJumping;
     private bool doubleJump;
     private bool isAttacking;
+    private bool recovery;
 
     public Animator anim;
 
@@ -133,11 +134,23 @@ public class Player : MonoBehaviour
         }
     }
 
+    float recoveryCount;
     public void onHit() {
-        anim.SetTrigger("takeHit");
-        health--;
 
-        if (health <= 0) {
+        recoveryCount += Time.deltaTime;
+
+        if (recoveryCount >= 2f) {
+            
+            anim.SetTrigger("takeHit");
+            health--;
+            
+            
+            recoveryCount = 0f;
+        }
+
+        if (health <= 0 && !recovery) {
+
+            recovery = true;
             speed = 0;
             anim.SetTrigger("death");
             Destroy(gameObject, 1f);
