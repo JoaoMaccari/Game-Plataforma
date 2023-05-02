@@ -15,7 +15,7 @@ public class controlador : MonoBehaviour
        
     }
 
-    public void Update() {
+    public void start() {
         getCoin();
     }
 
