@@ -100,15 +100,27 @@ public class Player : MonoBehaviour
 
             //cria uma area ao redor do meu objeto hit
             //especifico a posição que começa o hit, o raio e em qual layer precisa bater para funcionar
+            //o tipo collider armazena um colisor, neste caso vai pegar o colisor do inimigo
             Collider2D hit = Physics2D.OverlapCircle(point.position, radius, enemyLayer);
 
             if (hit != null) {
-                //pega a classe slime para poder acessar seu método de ataque
-                hit.GetComponent<slime>().onHit();
+
+                //se o hit não for null, eu checo qual script contem dentro dele
+                //para poder acessar o método de levar dano
+                if (hit.GetComponent<slime>()) {
+                    hit.GetComponent<slime>().onHit();
+                }
+
+                if (hit.GetComponent<Goblin>()) {
+                    hit.GetComponent<Goblin>().onHit();
+                }
+
+
+
             }
 
-            
-            
+
+
             //a corotina faz o transition receber o valor de 0 novamente quando o atack é encerrado
             //se eu tentar passar o valor de false para o atack de forma direta, não ia dar tempo de ocorrer a animação do atack
             StartCoroutine(onAttack());
@@ -167,6 +179,13 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.layer == 6) {
             onHit();
+        }
+
+        if (collision.CompareTag("Coin")) {
+            //pega o componente animatro da moeda e ativa o pjarametro hit
+            collision.GetComponent<Animator>().SetTrigger("hit");
+            Destroy(collision.gameObject, 0.5f);
+            controlador.instance.getCoin();
         }
     }
 }

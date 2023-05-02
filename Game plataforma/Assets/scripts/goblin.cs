@@ -10,11 +10,13 @@ public class Goblin : MonoBehaviour
     private bool isFront;
     public bool isRight;
     public float stopDistance;
+    private bool isDead;
 
     private Vector2 direction;
 
     public float speed;
     public float maxVision;
+    public int health = 3;
 
     public Transform point;
     public Transform behind;
@@ -54,7 +56,7 @@ public class Goblin : MonoBehaviour
 
     void onMove() {
 
-        if (isFront) {
+        if (isFront && !isDead) {
 
             anim.SetInteger("transicao", 1);
 
@@ -78,7 +80,7 @@ public class Goblin : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(point.position, direction, maxVision);
 
         //vai detectar o colider do objeto
-        if (hit.collider != null) {
+        if (hit.collider != null && !isDead) {
             
             //verifica se a tag do objeto é o player
             if (hit.transform.CompareTag("Player")) {
@@ -89,6 +91,7 @@ public class Goblin : MonoBehaviour
                 float distance = Vector2.Distance(transform.position, hit.transform.position);
 
                 if (distance <= stopDistance) {//distancia pra atacar
+
                     isFront = false;
                     rig.velocity = Vector2.zero;
 
@@ -108,12 +111,26 @@ public class Goblin : MonoBehaviour
             if (behindHit.transform.CompareTag("Player")) {
 
                 isRight = !isRight;
+                isFront = true;
+                anim.SetInteger("transicao", 2);
                 Debug.Log("atrás");
             }
 
         }
     }
 
+
+    public void onHit() {
+        anim.SetTrigger("hit");
+        health--;
+
+        if (health <= 0) {
+            isDead = true;
+            speed = 0;
+            anim.SetTrigger("death");
+            Destroy(gameObject, 1f);
+        }
+    }
 
     private void OnDrawGizmos() {
         Gizmos.DrawRay(point.position, direction * maxVision);
@@ -122,4 +139,5 @@ public class Goblin : MonoBehaviour
     private void OnDrawGizmosSelected() {
         Gizmos.DrawRay(point.position, -direction * maxVision);
     }
+
 }
