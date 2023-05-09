@@ -6,6 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private PlayerAudio playerAudio;
     public float speed;
     public float forcaPulo = 5.0f;
     public int health;
@@ -21,10 +22,25 @@ public class Player : MonoBehaviour
     public float radius;
 
     public LayerMask enemyLayer;
-    
+
+
+    private static Player instance;
+    private void Awake() {
+        DontDestroyOnLoad(this);// mantem um objeto em cena
+
+        if (instance == null) { //vai checar na cena seguinte se o instance é nulo(se já existe outro player na cena)
+
+            instance = this;//caso não tenha nenhum objeto player, instance recebe o objeto player. O this passa a receber a classe Player
+        }
+        else {
+            Destroy(gameObject);//se existir outra classe Player na cena ele destro o bjeto mantento apenas um player
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        playerAudio = GetComponent<PlayerAudio>();
         rb = GetComponent<Rigidbody2D>();   
     }
 
@@ -78,10 +94,13 @@ public class Player : MonoBehaviour
                 rb.AddForce(Vector2.up * forcaPulo, ForceMode2D.Impulse);
                 isJumping = true;
                 doubleJump = true;
+                playerAudio.PlaySFX(playerAudio.jumpSound);
             }else if (doubleJump) {
 
                 rb.AddForce(Vector2.up * forcaPulo, ForceMode2D.Impulse);
                 doubleJump = false;
+                playerAudio.PlaySFX(playerAudio.jumpSound);
+
 
             }
             
@@ -102,6 +121,8 @@ public class Player : MonoBehaviour
             //especifico a posição que começa o hit, o raio e em qual layer precisa bater para funcionar
             //o tipo collider armazena um colisor, neste caso vai pegar o colisor do inimigo
             Collider2D hit = Physics2D.OverlapCircle(point.position, radius, enemyLayer);
+
+            playerAudio.PlaySFX(playerAudio.hitSound);
 
             if (hit != null) {
 
@@ -144,6 +165,13 @@ public class Player : MonoBehaviour
         if (collisor.gameObject.layer == 3) {
             isJumping = false;
         }
+
+
+        //coloco um colisor em um lugar que cause a morte do personagem
+        //aqui eu chamo um singleton  que chama o checkpoint
+        if (collisor.gameObject.layer == 8) {
+            PlayerPos.instance.checkPoint();
+        }
     }
 
     float recoveryCount;
@@ -182,10 +210,15 @@ public class Player : MonoBehaviour
         }
 
         if (collision.CompareTag("Coin")) {
+            playerAudio.PlaySFX(playerAudio.coinSound);
             //pega o componente animatro da moeda e ativa o pjarametro hit
             collision.GetComponent<Animator>().SetTrigger("hit");
             Destroy(collision.gameObject, 0.5f);
             controlador.instance.getCoin();
+        }
+
+        if (collision.gameObject.layer == 7) {
+            controlador.instance.NextLvl();
         }
     }
 }
