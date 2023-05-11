@@ -9,12 +9,14 @@ public class Player : MonoBehaviour
     private PlayerAudio playerAudio;
     public float speed;
     public float forcaPulo = 5.0f;
-    public int health;
+    
 
     private bool isJumping;
     private bool doubleJump;
     private bool isAttacking;
     private bool recovery;
+
+    private vida healthSystem;
 
     public Animator anim;
 
@@ -26,14 +28,18 @@ public class Player : MonoBehaviour
 
     private static Player instance;
     private void Awake() {
-        DontDestroyOnLoad(this);// mantem um objeto em cena
 
-        if (instance == null) { //vai checar na cena seguinte se o instance é nulo(se já existe outro player na cena)
+        instance = this;
 
-            instance = this;//caso não tenha nenhum objeto player, instance recebe o objeto player. O this passa a receber a classe Player
-        }
-        else {
-            Destroy(gameObject);//se existir outra classe Player na cena ele destro o bjeto mantento apenas um player
+        if (instance == null) {
+
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+
+        }else if (instance != this) {
+            Destroy(instance.gameObject);
+            instance = this;
+            DontDestroyOnLoad(gameObject);
         }
     }
 
@@ -41,7 +47,8 @@ public class Player : MonoBehaviour
     void Start()
     {
         playerAudio = GetComponent<PlayerAudio>();
-        rb = GetComponent<Rigidbody2D>();   
+        rb = GetComponent<Rigidbody2D>();
+        healthSystem = GetComponent<vida>();
     }
 
     // Update is called once per frame
@@ -182,18 +189,19 @@ public class Player : MonoBehaviour
         if (recoveryCount >= 2f) {
             
             anim.SetTrigger("takeHit");
-            health--;
+            healthSystem.health--;
             
             
             recoveryCount = 0f;
         }
 
-        if (health <= 0 && !recovery) {
+        if (healthSystem.health <= 0 && !recovery) {
 
             recovery = true;
             speed = 0;
             anim.SetTrigger("death");
-            Destroy(gameObject, 1f);
+            //Destroy(gameObject, 1f);
+            controlador.instance.showGameOver();
         }
     }
 

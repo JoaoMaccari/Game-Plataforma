@@ -10,11 +10,17 @@ public class controlador : MonoBehaviour
     public int score;
     public Text scoreText;
 
+    //pega o canvas e guarda em uma variavel
+    public GameObject gameOverPanel;
+
 
     public static controlador instance;
 
     private void Awake() {
+
         instance = this;
+
+        Time.timeScale = 1f;
 
         //verifica o valor que esta armazenado no arquivo de texto
         if (PlayerPrefs.GetInt("scoreBin") != null) {
@@ -44,5 +50,16 @@ public class controlador : MonoBehaviour
     public void NextLvl() {
         SceneManager.LoadScene(1);
     }
-  
+    
+    public void showGameOver() {
+        //pausa o jogo
+        Time.timeScale = 0;
+        //ativa o painel de game over
+        gameOverPanel.SetActive(true);
+    }
+
+    public void restartGame() {
+        //vai chamar a sena em que o personagem se encontra
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 }
