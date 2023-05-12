@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -16,7 +17,11 @@ public class Player : MonoBehaviour
     private bool isAttacking;
     private bool recovery;
 
+    public Text scoreText;
+    public GameObject gameover;
+
     private vida healthSystem;
+    public float recoveryTime;
 
     public Animator anim;
 
@@ -26,17 +31,17 @@ public class Player : MonoBehaviour
     public LayerMask enemyLayer;
 
 
-    private static Player instance;
+    public static Player instance;
     private void Awake() {
 
-        instance = this;
-
+        
         if (instance == null) {
 
             instance = this;
             DontDestroyOnLoad(gameObject);
 
         }else if (instance != this) {
+
             Destroy(instance.gameObject);
             instance = this;
             DontDestroyOnLoad(gameObject);
@@ -181,30 +186,41 @@ public class Player : MonoBehaviour
         }
     }
 
-    float recoveryCount;
+    
     public void onHit() {
+        //o personagem só toma dano quando o recovery for falso
+        //por padrão ele já vai tomar dano, logo que ele toma dano o recovery fica true por 2 s (colldown do inimigo)
 
-        recoveryCount += Time.deltaTime;
+        //por padrão o recovery é falso
+        
+        if (!recovery) {
 
-        if (recoveryCount >= 2f) {
-            
+            //caso esteja falso recebe o hit e diminui a vida
             anim.SetTrigger("takeHit");
             healthSystem.health--;
-            
-            
-            recoveryCount = 0f;
+
+            //checa se o score vida cheou a zero e gera o game over
+            if (healthSystem.health <= 0 ) {
+
+                recovery = true;
+                speed = 0;
+                anim.SetTrigger("death");
+                //Destroy(gameObject, 1f);
+                controlador.instance.showGameOver();
+            }
+            else {//se nao for zero checa a coroutina que vai abrir o cool down para n tomar dano por 2s
+                StartCoroutine(Recover());
+            }
         }
 
-        if (healthSystem.health <= 0 && !recovery) {
-
-            recovery = true;
-            speed = 0;
-            anim.SetTrigger("death");
-            //Destroy(gameObject, 1f);
-            controlador.instance.showGameOver();
-        }
     }
 
+    //a coroutina vai manter o recovery true pelo tempo que o recoveyTime for estipulado
+    private IEnumerator Recover() {
+        recovery = true;
+        yield return new WaitForSeconds(recoveryTime);
+        recovery = false;
+    }
 
     void OnCollisionEnter2D(Collider2D coll) {
         if (coll.gameObject.layer == 6) {
@@ -218,6 +234,7 @@ public class Player : MonoBehaviour
         }
 
         if (collision.CompareTag("Coin")) {
+
             playerAudio.PlaySFX(playerAudio.coinSound);
             //pega o componente animatro da moeda e ativa o pjarametro hit
             collision.GetComponent<Animator>().SetTrigger("hit");
@@ -225,8 +242,6 @@ public class Player : MonoBehaviour
             controlador.instance.getCoin();
         }
 
-        if (collision.gameObject.layer == 7) {
-            controlador.instance.NextLvl();
-        }
+        
     }
 }

@@ -28,6 +28,7 @@ public class PlayerPos : MonoBehaviour
 
     public void checkPoint() {
         //passo em qual posição o player vai spawnar
+
         Vector3 playerPos = transform.position;
         playerPos.z = 0f;
 
