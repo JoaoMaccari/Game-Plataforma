@@ -563,7 +563,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
-  gameOverPanel: {fileID: 783775191}
 --- !u!4 &473292021
 Transform:
   m_ObjectHideFlags: 0
@@ -5855,6 +5854,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2858764098685505798, guid: dab77766b8ba3af4b8901e4323e51b6f, type: 3}
+      propertyPath: gameover
+      value: 
+      objectReference: {fileID: 783775191}
     - target: {fileID: 2858764098685505798, guid: dab77766b8ba3af4b8901e4323e51b6f, type: 3}
       propertyPath: scoreText
       value: 
